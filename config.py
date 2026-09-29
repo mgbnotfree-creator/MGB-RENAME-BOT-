@@ -28,7 +28,7 @@ class Config(object):
     LOG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "BotLog.txt")
  
     # other configs
-    PIC = os.environ.get("PIC", "https://graph.org/file/6c970cf925b22bf29b0dc-ee5ec1b45b123e0a9d.jpg")
+    PIC = os.environ.get("PIC", "https://i.postimg.cc/bYG60SRD/1790717064167.png")
     ADMIN = _int_env("ADMIN", 0)
     LOG_CHANNEL = _int_env("LOG_CHANNEL", 0)
     BIN_CHANNEL = _int_env("BIN_CHANNEL", 0)
@@ -158,7 +158,7 @@ class rkn(object):
 
 𝖱𝖾𝗉𝗅𝗒 𝗍𝗈 𝗍𝗁𝗂𝗌 𝗆𝖾𝗌𝗌𝖺𝗀𝖾 𝗐𝗂𝗍𝗁 𝗒𝗈𝗎𝗋 𝖼𝗈𝖽𝖾 (𝗍𝖾𝗑𝗍 𝗈𝗇𝗅𝗒)."""
     
-    CUSTOM_FILE_NAME = """<u>🖋️️ 𝖢𝗎𝗌𝗍𝗈𝗆 𝖥𝗂𝗅𝖾 𝖭𝖺𝗆𝖾</u>
+    CUSTOM_FILE_NAME = """<u>🖋️ 𝖢𝗎𝗌𝗍𝗈𝗆 𝖥𝗂𝗅𝖾 𝖭𝖺𝗆𝖾</u>
 
 𝖸𝗈𝗎 𝖢𝖺𝗇 𝖯𝗋𝖾-𝖠𝖽𝖽 𝖠 𝖯𝗋𝖾𝖿𝗂𝗑 𝖮𝗋 𝖲𝗎𝖿𝖿𝗂𝗑 𝖠𝗅𝗈𝗇𝗀 𝖶𝗂𝗍𝗁 𝖸𝗈𝗎𝗋 𝖭𝖾𝗐 𝖥𝗂𝗅𝖾 𝖭𝖺𝗆𝖾.
 
