@@ -40,8 +40,12 @@ async def start(client, message):
     if client.premium:
         start_button.append([InlineKeyboardButton('💸 ᴜᴘɢʀᴀᴅᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ 💸', callback_data='upgrade', style=ButtonStyle.SUCCESS)])
     user = message.from_user
-    if Config.PIC:
-        await message.reply_photo(Config.PIC, caption=rkn.START_TXT.format(user.mention), reply_markup=InlineKeyboardMarkup(start_button))    
+    
+    # 👇 Yahan aapki nayi photo set kar di gayi hai 👇
+    NEW_START_IMG = "https://i.postimg.cc/bYG60SRD/1790717064167.png"
+    
+    if NEW_START_IMG:
+        await message.reply_photo(NEW_START_IMG, caption=rkn.START_TXT.format(user.mention), reply_markup=InlineKeyboardMarkup(start_button))    
     else:
         await message.reply_text(text=rkn.START_TXT.format(user.mention), reply_markup=InlineKeyboardMarkup(start_button), link_preview_options=LinkPreviewOptions(is_disabled=True))
 
@@ -150,7 +154,7 @@ async def removethumb(client, message):
 async def addthumbs(client, message):
     rkn = await message.reply_text("<b><i>ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ</i></b>")
     await digital_botz.set_thumbnail(message.from_user.id, file_id=message.photo.file_id)                
-    await rkn.edit("✅️ <b><i>Tʜᴜᴍʙɴᴀɪʟ Sᴀᴠᴇᴅ</i></b>")
+    await rkn.edit("✅️️ <b><i>Tʜᴜᴍʙɴᴀɪʟ Sᴀᴠᴇᴅ</i></b>")
 
 @Client.on_message(filters.private & filters.command("myplan"))
 async def myplan(client, message):
@@ -213,6 +217,10 @@ async def cb_handler(client, query: CallbackQuery):
          ]]
         if client.premium:
             start_button.append([InlineKeyboardButton('💸 ᴜᴘɢʀᴀᴅᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ 💸', callback_data='upgrade', style=ButtonStyle.SUCCESS)])
+        
+        # 👇 Callbacks ke liye bhi photo ko update kar diya gaya hai 👇
+        NEW_START_IMG = "https://i.postimg.cc/bYG60SRD/1790717064167.png"
+        
         await query.message.edit_text(
             text=rkn.START_TXT.format(query.from_user.mention),
             link_preview_options=LinkPreviewOptions(is_disabled=True),
@@ -349,3 +357,4 @@ async def cb_handler(client, query: CallbackQuery):
             except Exception:
                 pass
         await query.message.continue_propagation()
+	
