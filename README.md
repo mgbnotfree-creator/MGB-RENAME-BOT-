@@ -9,10 +9,7 @@ A powerful Telegram bot designed to effortlessly rename and customize files with
 </div>
 
 ---
-
-
-https://github.com/user-attachments/assets/35720478-c325-4eee-90ab-3a0b36f22751
-
+ https://github.com/user-attachments/assets/35720478-c325-4eee-90ab-3a0b36f22751
 
 
 ## ✨ Key Features
