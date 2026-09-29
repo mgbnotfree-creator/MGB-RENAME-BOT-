@@ -10,6 +10,11 @@ A powerful Telegram bot designed to effortlessly rename and customize files with
 
 ---
 
+
+https://github.com/user-attachments/assets/35720478-c325-4eee-90ab-3a0b36f22751
+
+
+
 ## ✨ Key Features
 
 - 📦 **4GB File Support** (with STRING_SESSION)
