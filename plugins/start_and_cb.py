@@ -1,4 +1,4 @@
-import asyncio, datetime, time, psutil
+Import asyncio, datetime, time, psutil
 from html import escape
 from pyrogram.enums import ButtonStyle
 from pyrogram import Client, filters
@@ -48,7 +48,7 @@ async def start(client, message):
 @Client.on_message(filters.private & filters.command('setprefix'))
 async def add_prefix(client, message):
     if len(message.command) == 1:
-        return await message.reply_text("<b><i>Give The Prefix</i>\n\nExᴀᴍᴩʟᴇ:- <code>/setprefix @TechifyBots</code></b>")
+        return await message.reply_text("<b><i>Give The Prefix</i>\n\nExᴀᴍᴩʟᴇ:- <code>/setprefix @MGB_NOT_FREE</code></b>")
     prefix = message.text.split(" ", 1)[1]
     RknDev = await message.reply_text("Please Wait ...")
     await digital_botz.set_prefix(message.from_user.id, prefix)
@@ -75,7 +75,7 @@ async def see_prefix(client, message):
 @Client.on_message(filters.private & filters.command('setsuffix'))
 async def add_suffix(client, message):
     if len(message.command) == 1:
-        return await message.reply_text("<b><i>Give The Suffix</i>\n\nExᴀᴍᴩʟᴇ:- <code>/setsuffix @TechifyBots</code></b>")
+        return await message.reply_text("<b><i>Give The Suffix</i>\n\nExᴀᴍᴩʟᴇ:- <code>/setsuffix @MGB_NOT_FREE</code></b>")
     suffix = message.text.split(" ", 1)[1]
     RknDev = await message.reply_text("Please Wait ...")
     await digital_botz.set_suffix(message.from_user.id, suffix)
@@ -103,7 +103,7 @@ async def see_suffix(client, message):
 async def add_caption(client, message):
     rkn = await message.reply_text("<b><i>ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ</i></b>")
     if len(message.command) == 1:
-       return await rkn.edit("<b><i>Gɪᴠᴇ Tʜᴇ Cᴀᴩᴛɪᴏɴ</i>\n\nExᴀᴍᴩʟᴇ:- <code>/setcaption {filename}\n\n💾 Sɪᴢᴇ: {filesize}\n\n⏰ Dᴜʀᴀᴛɪᴏɴ: {duration}</code>\n<b>By: @TechifyBots</b>")
+       return await rkn.edit("<b><i>Gɪᴠᴇ Tʜᴇ Cᴀᴩᴛɪᴏɴ</i>\n\nExᴀᴍᴩʟᴇ:- <code>/setcaption {filename}\n\n💾 Sɪᴢᴇ: {filesize}\n\n⏰ Dᴜʀᴀᴛɪᴏɴ: {duration}</code>\n<b>By: @MGB_NOT_FREE</b>")
     caption = message.text.split(" ", 1)[1]
     await digital_botz.set_caption(message.from_user.id, caption=caption)
     await rkn.edit("<b><i>✅ Cᴀᴩᴛɪᴏɴ Sᴀᴠᴇᴅ</i></b>")
@@ -150,7 +150,7 @@ async def removethumb(client, message):
 async def addthumbs(client, message):
     rkn = await message.reply_text("<b><i>ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ</i></b>")
     await digital_botz.set_thumbnail(message.from_user.id, file_id=message.photo.file_id)                
-    await rkn.edit("✅️ <b><i>Tʜᴜᴍʙɴᴀɪʟ Sᴀᴠᴇᴅ</i></b>")
+    await rkn.edit("✅️️ <b><i>Tʜᴜᴍʙɴᴀɪʟ Sᴀᴠᴇᴅ</i></b>")
 
 @Client.on_message(filters.private & filters.command("myplan"))
 async def myplan(client, message):
@@ -349,3 +349,4 @@ async def cb_handler(client, query: CallbackQuery):
             except Exception:
                 pass
         await query.message.continue_propagation()
+	
