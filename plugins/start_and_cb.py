@@ -1,4 +1,4 @@
-Import asyncio, datetime, time, psutil
+import asyncio, datetime, time, psutil
 from html import escape
 from pyrogram.enums import ButtonStyle
 from pyrogram import Client, filters
@@ -150,7 +150,7 @@ async def removethumb(client, message):
 async def addthumbs(client, message):
     rkn = await message.reply_text("<b><i>ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ</i></b>")
     await digital_botz.set_thumbnail(message.from_user.id, file_id=message.photo.file_id)                
-    await rkn.edit("✅️️ <b><i>Tʜᴜᴍʙɴᴀɪʟ Sᴀᴠᴇᴅ</i></b>")
+    await rkn.edit("✅ <b><i>Tʜᴜᴍʙɴᴀɪʟ Sᴀᴠᴇᴅ</i></b>")
 
 @Client.on_message(filters.private & filters.command("myplan"))
 async def myplan(client, message):
@@ -349,4 +349,3 @@ async def cb_handler(client, query: CallbackQuery):
             except Exception:
                 pass
         await query.message.continue_propagation()
-	
