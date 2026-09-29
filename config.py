@@ -60,7 +60,7 @@ class rkn(object):
 
 𝖳𝖺𝗉 𝖧𝖾𝗅𝗉 𝖳𝗈 𝖤𝗑𝗉𝗅𝗈𝗋𝖾 𝖠𝗅𝗅 𝖥𝖾𝖺𝗍𝗎𝗋𝖾𝗌
 
-<blockquote><b>‣ 𝖬𝖺𝗂𝗇𝗍𝖺𝗂𝗇𝖾𝖽 𝖡𝗒: <a href='https://techifybots.vercel.app'>𝖳𝖾𝖼𝗁𝗂𝖿𝗒 𝖡𝗈𝗍𝗌</a></b></blockquote>"""
+<blockquote><b>‣ 𝖬𝖺𝗂𝗇𝗍𝖺𝗂𝗇𝖾𝖽 𝖡𝗒: <a href='https://t.me/MGB_NOT_FREE'>@MGB_NOT_FREE</a></b></blockquote>"""
 
     ABOUT_TXT = """<b>╭───────────⍟
 ├ 🤖 𝖭𝖺𝗆𝖾 : {}
@@ -77,7 +77,7 @@ class rkn(object):
 <b>•></b> 𝖲𝖾𝗇𝖽 𝖠𝗇𝗒 𝖥𝗂𝗅𝖾 𝖠𝗇𝖽 𝖤𝗇𝗍𝖾𝗋 𝖳𝗁𝖾 𝖭𝖾𝗐 𝖥𝗂𝗅𝖾 𝖭𝖺𝗆𝖾.
 𝖳𝗁𝖾𝗇 𝖲𝖾𝗅𝖾𝖼𝗍 𝖳𝗁𝖾 𝖱𝖾𝗊𝗎𝗂𝗋𝖾𝖽 𝖥𝗈𝗋𝗆𝖺𝗍 [ 𝖣𝗈𝖼𝗎𝗆𝖾𝗇𝗍, 𝖵𝗂𝖽𝖾𝗈, 𝖠𝗎𝖽𝗂𝗈 ].
 
-ℹ️ 𝖥𝗈𝗋 𝖠𝗇𝗒 𝖮𝗍𝗁𝖾𝗋 𝖧𝖾𝗅𝗉, 𝖢𝗈𝗇𝗍𝖺𝖼𝗍 𝖮𝗎𝗋 <a href=https://t.me/TechifySupport>𝖲𝖴𝖯𝖯𝖮𝖱𝖳 𝖦𝖱𝖮𝖴𝖯</a>"""
+ℹ️ 𝖥𝗈𝗋 𝖠𝗇𝗒 𝖮𝗍𝗁𝖾𝗋 𝖧𝖾𝗅𝗉, 𝖢𝗈𝗇𝗍𝖺𝖼𝗍 𝖮𝗎𝗋 <a href=https://t.me/MGB_NOT_FREE>𝖲𝖴𝖯𝖯𝖮𝖱𝖳 𝖦𝖱𝖮𝖴𝖯</a>"""
 
     UPGRADE_PREMIUM = """
 •⪼ ★ 𝖯𝗅𝖺𝗇𝗌    -  ⏳ 𝖣𝗎𝗋𝖺𝗍𝗂𝗈𝗇 - 💸 𝖯𝗋𝗂𝖼𝖾
@@ -150,11 +150,11 @@ class rkn(object):
 
     SEND_METADATA = """<b>📝 𝖲𝖾𝗇𝖽 𝖸𝗈𝗎𝗋 𝖢𝗎𝗌𝗍𝗈𝗆 𝖬𝖾𝗍𝖺𝖽𝖺𝗍𝖺 𝖢𝗈𝖽𝖾</b>
 
-<code>--change-title @TechifyBots
---change-video-title @TechifyBots
---change-audio-title @TechifyBots
---change-subtitle-title @TechifyBots
---change-author @TechifyBots</code>
+<code>--change-title @MGB_NOT_FREE
+--change-video-title @MGB_NOT_FREE
+--change-audio-title @MGB_NOT_FREE
+--change-subtitle-title @MGB_NOT_FREE
+--change-author @MGB_NOT_FREE</code>
 
 𝖱𝖾𝗉𝗅𝗒 𝗍𝗈 𝗍𝗁𝗂𝗌 𝗆𝖾𝗌𝗌𝖺𝗀𝖾 𝗐𝗂𝗍𝗁 𝗒𝗈𝗎𝗋 𝖼𝗈𝖽𝖾 (𝗍𝖾𝗑𝗍 𝗈𝗇𝗅𝗒)."""
     
@@ -169,8 +169,8 @@ class rkn(object):
 ➢ /seesuffix - 𝖴𝗌𝖾 𝖳𝗁𝗂𝗌 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 𝖳𝗈 𝖵𝗂𝖾𝗐 𝖸𝗈𝗎𝗋 𝖲𝗎𝖿𝖿𝗂𝗑.
 ➢ /delsuffix - 𝖴𝗌𝖾 𝖳𝗁𝗂𝗌 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 𝖳𝗈 𝖣𝖾𝗅𝖾𝗍𝖾 𝖸𝗈𝗎𝗋 𝖲𝗎𝖿𝖿𝗂𝗑.
 
-𝖤𝗑𝖺𝗆𝗉𝗅𝖾: <code>/setsuffix @TechifyBots</code>
-𝖤𝗑𝖺𝗆𝗉𝗅𝖾: <code>/setprefix @TechifyBots</code>"""
+𝖤𝗑𝖺𝗆𝗉𝗅𝖾: <code>/setsuffix @MGB_NOT_FREE</code>
+𝖤𝗑𝖺𝗆𝗉𝗅𝖾: <code>/setprefix @MGB_NOT_FREE</code>"""
 
     DEV_TXT = """<b><u>𝖲𝗉𝖾𝖼𝗂𝖺𝗅 𝖳𝗁𝖺𝗇𝗄𝗌 & 𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝗋𝗌</u></b>
 
@@ -189,3 +189,4 @@ class rkn(object):
 ┣⪼ 🚀 𝗦𝗣𝗘𝗘𝗗: {3}/s
 ┣⪼ ⏰ 𝗘𝗧𝗔: {4}
 ╰━━━━━━━━◉🔥◉━━━━━━━━╯</b>"""
+    
