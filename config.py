@@ -28,7 +28,7 @@ class Config(object):
     LOG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "BotLog.txt")
  
     # other configs
-    PIC = os.environ.get("PIC", "")
+    PIC = os.environ.get("PIC", "https://i.ibb.co/YTk9gzhY/IMG-20250906-144306-804.jpg")
     ADMIN = _int_env("ADMIN", 0)
     LOG_CHANNEL = _int_env("LOG_CHANNEL", 0)
     BIN_CHANNEL = _int_env("BIN_CHANNEL", 0)
@@ -60,7 +60,7 @@ class rkn(object):
 
 𝖳𝖺𝗉 𝖧𝖾𝗅𝗉 𝖳𝗈 𝖤𝗑𝗉𝗅𝗈𝗋𝖾 𝖠𝗅𝗅 𝖥𝖾𝖺𝗍𝗎𝗋𝖾𝗌
 
-<blockquote><b>‣ 𝖬𝖺𝗂𝗇𝗍𝖺𝗂𝗇𝖾𝖽 𝖡𝗒: <a href='https://t.me/MGB_NOT_FREE'>MGB NOT FREE</a></b></blockquote>"""
+<blockquote><b>‣ 𝖬𝖺𝗂𝗇𝗍𝖺𝗂𝗇𝖾𝖽 𝖡𝗒: <a href='https://techifybots.vercel.app'>𝖳𝖾𝖼𝗁𝗂𝖿𝗒 𝖡𝗈𝗍𝗌</a></b></blockquote>"""
 
     ABOUT_TXT = """<b>╭───────────⍟
 ├ 🤖 𝖭𝖺𝗆𝖾 : {}
@@ -150,11 +150,11 @@ class rkn(object):
 
     SEND_METADATA = """<b>📝 𝖲𝖾𝗇𝖽 𝖸𝗈𝗎𝗋 𝖢𝗎𝗌𝗍𝗈𝗆 𝖬𝖾𝗍𝖺𝖽𝖺𝗍𝖺 𝖢𝗈𝖽𝖾</b>
 
-<code>--change-title @MGB_NOT_FREE
---change-video-title @MGB_NOT_FREE
---change-audio-title @MGB_NOT_FREE
---change-subtitle-title @MGB_NOT_FREE
---change-author @MGB_NOT_FREE</code>
+<code>--change-title @TechifyBots
+--change-video-title @TechifyBots
+--change-audio-title @TechifyBots
+--change-subtitle-title @TechifyBots
+--change-author @TechifyBots</code>
 
 𝖱𝖾𝗉𝗅𝗒 𝗍𝗈 𝗍𝗁𝗂𝗌 𝗆𝖾𝗌𝗌𝖺𝗀𝖾 𝗐𝗂𝗍𝗁 𝗒𝗈𝗎𝗋 𝖼𝗈𝖽𝖾 (𝗍𝖾𝗑𝗍 𝗈𝗇𝗅𝗒)."""
     
@@ -169,8 +169,8 @@ class rkn(object):
 ➢ /seesuffix - 𝖴𝗌𝖾 𝖳𝗁𝗂𝗌 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 𝖳𝗈 𝖵𝗂𝖾𝗐 𝖸𝗈𝗎𝗋 𝖲𝗎𝖿𝖿𝗂𝗑.
 ➢ /delsuffix - 𝖴𝗌𝖾 𝖳𝗁𝗂𝗌 𝖢𝗈𝗆𝗆𝖺𝗇𝖽 𝖳𝗈 𝖣𝖾𝗅𝖾𝗍𝖾 𝖸𝗈𝗎𝗋 𝖲𝗎𝖿𝖿𝗂𝗑.
 
-𝖤𝗑𝖺𝗆𝗉𝗅𝖾: <code>/setsuffix @MGB_NOT_FREE</code>
-𝖤𝗑𝖺𝗆𝗉𝗅𝖾: <code>/setprefix @MGB_NOT_FREE</code>"""
+𝖤𝗑𝖺𝗆𝗉𝗅𝖾: <code>/setsuffix @TechifyBots</code>
+𝖤𝗑𝖺𝗆𝗉𝗅𝖾: <code>/setprefix @TechifyBots</code>"""
 
     DEV_TXT = """<b><u>𝖲𝗉𝖾𝖼𝗂𝖺𝗅 𝖳𝗁𝖺𝗇𝗄𝗌 & 𝖣𝖾𝗏𝖾𝗅𝗈𝗉𝖾𝗋𝗌</u></b>
 
@@ -189,4 +189,3 @@ class rkn(object):
 ┣⪼ 🚀 𝗦𝗣𝗘𝗘𝗗: {3}/s
 ┣⪼ ⏰ 𝗘𝗧𝗔: {4}
 ╰━━━━━━━━◉🔥◉━━━━━━━━╯</b>"""
-    
