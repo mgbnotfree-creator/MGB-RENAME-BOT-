@@ -28,7 +28,7 @@ class Config(object):
     LOG_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "BotLog.txt")
  
     # other configs
-    PIC = os.environ.get("PIC", "https://i.postimg.cc/bYG60SRD/1790717064167.png")
+    PIC = os.environ.get("PIC", "")
     ADMIN = _int_env("ADMIN", 0)
     LOG_CHANNEL = _int_env("LOG_CHANNEL", 0)
     BIN_CHANNEL = _int_env("BIN_CHANNEL", 0)
