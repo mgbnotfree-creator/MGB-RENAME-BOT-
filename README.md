@@ -407,17 +407,4 @@ This repository is based on the original work of:
 
 ## 👤 Connect With Me
 
-<p align="center">
-  <b style="font-size: 5.5em;">Rahul Dhankhar</b>
-  <br/>
-  <sub><i>Open Source Maintainer • TechifyBots</i></sub>
-<br/><br/>
-<a href="https://github.com/TechifyBots"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white"></a>
-<a href="https://telegram.me/ImRahulDhankhar"><img src="https://img.shields.io/badge/Telegram-26A5E4?style=for-the-badge&logo=telegram&logoColor=white"></a>
-<a href="https://instagram.com/ImRahulDhankhar"><img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white"></a>
-<a href="https://youtube.com/@TechifyBots"><img src="https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white"></a>
-<br>
-<a href="https://techifybots.github.io/PayWeb">
-  <img src="https://img.shields.io/badge/💖-Support_Development-ff4d6d?style=for-the-badge">
-</a>
-</p>
+@MGB_NOT_FREE
