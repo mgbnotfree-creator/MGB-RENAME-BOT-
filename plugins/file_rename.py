@@ -2,12 +2,12 @@ from pyrogram import Client, filters
 from pyrogram.enums import ButtonStyle, MessageMediaType, ParseMode
 from pyrogram.errors import FloodWait
 from pyrogram.file_id import FileId
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, ForceReply, ReplyParameters
+from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from PIL import Image
 from helper.utils import progress_for_pyrogram, convert, humanbytes, add_prefix_suffix, remove_path
 from helper.database import digital_botz
 from helper.ffmpeg import change_metadata, get_duration
-from config import Config, rkn
+from config import Config
 import os, time, asyncio
 from html import escape
 import logging
@@ -17,9 +17,7 @@ DOWNLOAD_TEXT = """Download Started..."""
 
 logger = logging.getLogger(__name__)
 
-app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION, parse_mode=ParseMode.HTML)
-
-# --- Direct Auto Rename Logic ---
+# --- Simplified Direct Auto Rename Logic ---
 @Client.on_message(filters.private & (filters.audio | filters.document | filters.video))
 async def auto_rename_start(client, message):
     user_id = message.from_user.id
@@ -30,23 +28,7 @@ async def auto_rename_start(client, message):
     if not filename:
         filename = f"unknown_{int(time.time())}.mkv"
         
-    # Check limits first
-    if client.premium and client.uploadlimit:
-        user_data = await digital_botz.reset_uploadlimit_access(user_id)
-        limit = user_data.get('uploadlimit', 0)
-        used = user_data.get('used_limit', 0)
-        remain = int(limit) - int(used)
-        if remain < int(file.file_size):
-            used_percentage = int(used) / int(limit) * 100
-            return await message.reply_text(f"{used_percentage:.2f}% Of Daily Upload Limit {humanbytes(limit)}.\n\n Media Size: {filesize}\n Your Used Daily Limit {humanbytes(used)}\n\nYou have only <b>{humanbytes(remain)}</b> Data.\nPlease, Buy Premium Plan s.", reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("🪪 Uᴘɢʀᴀᴅᴇ", callback_data="plans", style=ButtonStyle.SUCCESS)]]))
-            
-    if not client.premium and file.file_size > 2000 * 1024 * 1024:
-        return await message.reply_text("If you want to rename 4GB+ files then you will have to buy premium. /plans")
-        
-    if client.premium and not Config.STRING_SESSION and file.file_size > 2000 * 1024 * 1024:
-         return await message.reply_text("Sᴏʀʀy Bʀᴏ Tʜɪꜱ Bᴏᴛ Iꜱ Dᴏᴇꜱɴ'ᴛ Sᴜᴩᴩᴏʀᴛ Uᴩʟᴏᴀᴅɪɴɢ Fɪʟᴇꜱ Bɪɢɢᴇʀ Tʜᴀɴ 2Gʙ+")
-
-    # Prepare for processing
+    # Prepare for processing immediately
     rkn_processing = await message.reply_text("<code>Added to queue... Processing...</code>", quote=True)
     
     user_data = await digital_botz.get_user_data(user_id)
@@ -78,19 +60,10 @@ async def auto_rename_start(client, message):
 
     await rkn_processing.edit("<code>Downloading...</code>")
     
-    # Update Used Limit
-    if client.premium and client.uploadlimit:
-        used = user_data.get('used_limit', 0)        
-        total_used = int(used) + int(file.file_size)
-        await digital_botz.set_used_limit(user_id, total_used)
-
     # Download File
     try:            
         dl_path = await client.download_media(message=message, file_name=file_path, progress=progress_for_pyrogram, progress_args=(DOWNLOAD_TEXT, rkn_processing, time.time()))                    
     except Exception as e:
-        if client.premium and client.uploadlimit:
-            used_remove = int(used) - int(file.file_size)
-            await digital_botz.set_used_limit(user_id, used_remove)
         return await rkn_processing.edit(f"Download Error: {escape(str(e))}")
 
     # Process Metadata
@@ -118,9 +91,6 @@ async def auto_rename_start(client, message):
          try:
              caption = c_caption.format(filename=escape(str(new_filename)), filesize=escape(humanbytes(file.file_size)), duration=escape(str(convert(duration))))
          except Exception as e:
-             if client.premium and client.uploadlimit:
-                 used_remove = int(used) - int(file.file_size)
-                 await digital_botz.set_used_limit(user_id, used_remove)
              return await rkn_processing.edit(text=f"Caption Error: ({escape(str(e))})")             
     else:
          caption = f"<b>{escape(str(new_filename))}</b>\n\n<b>User:</b> {escape(str(message.from_user.first_name))}\n<b>User ID:</b> <code>{user_id}</code>"
@@ -148,9 +118,6 @@ async def auto_rename_start(client, message):
     )
     
     if error:
-        if client.premium and client.uploadlimit:
-            used_remove = int(used) - int(file.file_size)
-            await digital_botz.set_used_limit(user_id, used_remove)
         await remove_path(ph_path, file_path, dl_path, metadata_path)
         return await rkn_processing.edit(f"Upload Error: {escape(str(error))}")
 
@@ -164,19 +131,14 @@ async def auto_rename_start(client, message):
     await remove_path(ph_path, file_path, dl_path, metadata_path)
     return await rkn_processing.edit("<b>Upload Complete!</b>")
 
-# Keep the upload_files helper function exactly as it was
 async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption, duration, rkn_processing):
     """
     Unified function to upload files based on type
-    - Supports both 2GB and 4GB files
-    - Uses same function for all file sizes
-    - Handles document, video, and audio files
     """
     try:
-        # Check if file exists
         if not os.path.exists(file_path):
             return None, f"File not found: {file_path}"
-        # Upload document files (2GB & 4GB)
+            
         if upload_type == "document":
             filw = await bot.send_document(
                 sender_id,
@@ -185,7 +147,6 @@ async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption,
                 caption=caption,
                 progress=progress_for_pyrogram,
                 progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
-        # Upload video files (2GB & 4GB)  
         elif upload_type == "video":
             filw = await bot.send_video(
                 sender_id,
@@ -195,7 +156,6 @@ async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption,
                 duration=duration,
                 progress=progress_for_pyrogram,
                 progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
-        # Upload audio files (2GB & 4GB)
         elif upload_type == "audio":
             filw = await bot.send_audio(
                 sender_id,
@@ -207,9 +167,8 @@ async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption,
                 progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
         else:
             return None, f"Unknown upload type: {upload_type}"
-        # Return uploaded file object
+            
         return filw, None
     except Exception as e:
-        # Return error if upload fails
         return None, str(e)
-            
+    
