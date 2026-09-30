@@ -1,8 +1,5 @@
 from pyrogram import Client, filters
-from pyrogram.enums import ButtonStyle, MessageMediaType, ParseMode
-from pyrogram.errors import FloodWait
-from pyrogram.file_id import FileId
-from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.enums import MessageMediaType, ParseMode
 from PIL import Image
 from helper.utils import progress_for_pyrogram, convert, humanbytes, add_prefix_suffix, remove_path
 from helper.database import digital_botz
@@ -17,7 +14,8 @@ DOWNLOAD_TEXT = """Download Started..."""
 
 logger = logging.getLogger(__name__)
 
-# ---> ORIGINAL APP CLIENT - DO NOT REMOVE <---
+# ---> THIS IS THE CRITICAL LINE FIXING THE ERROR <---
+# We must define the client as 'app' here so bot.py can import it
 app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION, parse_mode=ParseMode.HTML)
 
 
@@ -187,4 +185,4 @@ async def auto_rename_start(client, message):
             
     await remove_path(ph_path, file_path, dl_path, metadata_path)
     await rkn_processing.delete()
-
+    
