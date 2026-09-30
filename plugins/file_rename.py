@@ -57,15 +57,7 @@ async def auto_rename_start(bot, message):
         if not user_data:
             user_data = {}
             
-        is_premium = False
-        plan = user_data.get('plan', 'Free')
-        
-        if plan.lower() not in ['free', 'none', '']:
-            is_premium = True
-        elif user_data.get('is_premium') == True:
-            is_premium = True
-        elif user_data.get('expire_date') or user_data.get('premium_access'):
-            is_premium = True
+        is_premium = user_data.get('is_premium', False)
             
         # --- DAILY LIMIT CHECK ---
         today = date.today().isoformat()
@@ -195,7 +187,6 @@ async def auto_rename_start(bot, message):
     except Exception as e:
         logger.error(f"Critical error in auto_rename: {e}")
         try:
-            await message.reply_text(f"⚠️️ Error processing file: {e}")
+            await message.reply_text(f"⚠️ Error processing file: {e}")
         except:
             pass
-        
