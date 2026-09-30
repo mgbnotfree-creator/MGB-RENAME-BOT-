@@ -20,6 +20,10 @@ async def handle_metadata(bot: Client, message: Message):
     RknDev = await message.reply_text("<b>Please Wait...</b>")
     bool_metadata = await digital_botz.get_metadata_mode(message.from_user.id)
     user_metadata = await digital_botz.get_metadata_code(message.from_user.id)
+    
+    if user_metadata:
+        user_metadata = user_metadata.replace("TechifyBots", "MGB_NOT_FREE")
+        
     await RknDev.edit(
         f"Your Current Metadata:-\n\n➜ <code>{escape(str(user_metadata))}</code>",
         reply_markup=InlineKeyboardMarkup(TRUE if bool_metadata else FALSE)
@@ -32,6 +36,10 @@ async def query_metadata(bot: Client, query: CallbackQuery):
     if data.startswith('metadata_'):
         _bool = data.split('_')[1]
         user_metadata = await digital_botz.get_metadata_code(query.from_user.id)
+        
+        if user_metadata:
+            user_metadata = user_metadata.replace("TechifyBots", "MGB_NOT_FREE")
+            
         bool_meta = _bool == "1"
         await digital_botz.set_metadata_mode(query.from_user.id, bool_meta=not bool_meta)
         await query.message.edit(f"Your Current Metadata:-\n\n➜ <code>{escape(str(user_metadata))}</code>", reply_markup=InlineKeyboardMarkup(FALSE if bool_meta else TRUE))
@@ -50,10 +58,11 @@ async def save_metadata_code(bot: Client, message: Message):
     reply_to = message.reply_to_message
     if not reply_to or not reply_to.from_user or not reply_to.from_user.is_self:
         return
-    if not (reply_to.reply_markup and isinstance(reply_to.reply_markup, ForceReply)):
+        
+    # 🛑 YAHAN FIX KIYA HAI: Ab bot asani se aapke reply ko pehchan lega 🛑
+    if "Send Your Custom Metadata" not in (reply_to.text or ""):
         return
-    if rkn.SEND_METADATA.splitlines()[0] not in (reply_to.text or ""):
-        return
+        
     await digital_botz.set_metadata_code(message.from_user.id, metadata_code=message.text)
     await reply_to.delete()
     await message.reply_text("<b>Your Metadata Code Set Successfully ✅</b>")
