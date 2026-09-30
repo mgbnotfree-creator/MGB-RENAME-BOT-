@@ -14,7 +14,7 @@ DOWNLOAD_TEXT = """Download Started..."""
 
 logger = logging.getLogger(__name__)
 
-# ---> यह लाइन बहुत ज़रूरी है (4GB Session के लिए) <---
+# ---> 4GB Session Client <---
 app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION, parse_mode=ParseMode.HTML)
 
 
@@ -58,7 +58,7 @@ async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption,
         return None, str(e)
 
 
-# ---> FIX: Added group=1 so this handler never gets blocked! <---
+# ---> FIX: Removed quote=True which was causing the crash <---
 @Client.on_message(filters.private & (filters.audio | filters.document | filters.video), group=1)
 async def auto_rename_start(bot, message):
     try:
@@ -94,8 +94,8 @@ async def auto_rename_start(bot, message):
         # Clean up filename just in case it has weird characters
         filename = filename.replace("/", "_").replace("\\", "_")
 
-        # 3. Start processing immediately
-        rkn_processing = await message.reply_text("<code>Added to queue... Processing...</code>", quote=True)
+        # 3. Start processing immediately (quote=True is REMOVED)
+        rkn_processing = await message.reply_text("<code>Added to queue... Processing...</code>")
         
         user_data = await digital_botz.get_user_data(user_id)
         if not user_data:
