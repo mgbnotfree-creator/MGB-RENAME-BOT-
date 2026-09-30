@@ -58,6 +58,12 @@ async def auto_rename_start(bot, message):
             user_data = {}
             
         is_premium = user_data.get('is_premium', False)
+        premium_expiry = user_data.get('premium_expiry', 0)
+        
+        # 🛑 NEW: टाइम लिमिट चेक 🛑
+        # अगर एक्सपायरी डेट खत्म हो चुकी है (आज का समय > एक्सपायरी का समय), तो प्रीमियम हटा दो
+        if is_premium and premium_expiry and time.time() > premium_expiry:
+            is_premium = False
             
         # --- DAILY LIMIT CHECK ---
         today = date.today().isoformat()
@@ -190,3 +196,4 @@ async def auto_rename_start(bot, message):
             await message.reply_text(f"⚠️ Error processing file: {e}")
         except:
             pass
+            
