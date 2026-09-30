@@ -8,6 +8,7 @@ from config import Config
 import os, time, asyncio
 from html import escape
 import logging
+from datetime import date
 
 UPLOAD_TEXT = """Uploading Started...."""
 DOWNLOAD_TEXT = """Download Started..."""
@@ -17,40 +18,29 @@ logger = logging.getLogger(__name__)
 # ---> 4GB Session Client <---
 app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION, parse_mode=ParseMode.HTML)
 
+# ==========================================
+# 🛑 DAILY LIMIT SETTINGS 🛑
+# ==========================================
+DAILY_LIMIT = 10  
+user_usage = {}   
+# ==========================================
 
 async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption, duration, rkn_processing):
-    """
-    Unified function to upload files based on type
-    """
     try:
         if not os.path.exists(file_path):
             return None, f"File not found: {file_path}"
         if upload_type == "document":
             filw = await bot.send_document(
-                sender_id,
-                document=file_path,
-                thumb=ph_path,
-                caption=caption,
-                progress=progress_for_pyrogram,
-                progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                sender_id, document=file_path, thumb=ph_path, caption=caption,
+                progress=progress_for_pyrogram, progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
         elif upload_type == "video":
             filw = await bot.send_video(
-                sender_id,
-                video=file_path,
-                caption=caption,
-                thumb=ph_path,
-                duration=duration,
-                progress=progress_for_pyrogram,
-                progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                sender_id, video=file_path, caption=caption, thumb=ph_path, duration=duration,
+                progress=progress_for_pyrogram, progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
         elif upload_type == "audio":
             filw = await bot.send_audio(
-                sender_id,
-                audio=file_path,
-                caption=caption,
-                thumb=ph_path,
-                duration=duration,
-                progress=progress_for_pyrogram,
-                progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
+                sender_id, audio=file_path, caption=caption, thumb=ph_path, duration=duration,
+                progress=progress_for_pyrogram, progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
         else:
             return None, f"Unknown upload type: {upload_type}"
         return filw, None
@@ -58,13 +48,32 @@ async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption,
         return None, str(e)
 
 
-# ---> FIX: Removed quote=True which was causing the crash <---
 @Client.on_message(filters.private & (filters.audio | filters.document | filters.video), group=1)
 async def auto_rename_start(bot, message):
     try:
         user_id = message.from_user.id if message.from_user else message.chat.id
         
-        # 1. Safely extract the file object
+        # 1. सबसे पहले यूज़र का डेटा निकालें ताकि पता चले कि वो प्रीमियम है या नहीं
+        user_data = await digital_botz.get_user_data(user_id)
+        if not user_data:
+            user_data = {}
+            
+        is_premium = user_data.get('is_premium', False)
+        
+        # --- DAILY LIMIT CHECK ---
+        today = date.today().isoformat()
+        
+        if user_id not in user_usage or user_usage[user_id]['date'] != today:
+            user_usage[user_id] = {'date': today, 'count': 0}
+            
+        # अगर यूज़र एडमिन (Admin) या प्रीमियम (Premium) नहीं है, तभी लिमिट लगेगी
+        if user_usage[user_id]['count'] >= DAILY_LIMIT and user_id != Config.ADMIN and not is_premium:
+            await message.reply_text(f"⚠️ **आपकी आज की लिमिट खत्म हो गई है!**\n\nआप 1 दिन में सिर्फ {DAILY_LIMIT} फाइलें ही रीनेम कर सकते हैं।\n\n👑 **अनलिमिटेड रीनेम के लिए प्रीमियम खरीदें!** (संपर्क करें: Admin)")
+            return
+            
+        user_usage[user_id]['count'] += 1
+        # -------------------------
+
         file = None
         if message.document:
             file = message.document
@@ -79,11 +88,9 @@ async def auto_rename_start(bot, message):
             upload_type = "audio"
             default_ext = "m4a"
         else:
-            return # Not a supported media type
+            return 
 
-        # 2. Aggressive filename extraction (Fail-proof)
         filename = "Unknown_File"
-        
         if hasattr(file, 'file_name') and file.file_name:
             filename = file.file_name
         elif hasattr(file, 'title') and file.title:
@@ -91,15 +98,9 @@ async def auto_rename_start(bot, message):
         else:
             filename = f"Downloaded_Media_{int(time.time())}.{default_ext}"
 
-        # Clean up filename just in case it has weird characters
         filename = filename.replace("/", "_").replace("\\", "_")
 
-        # 3. Start processing immediately (quote=True is REMOVED)
         rkn_processing = await message.reply_text("<code>Added to queue... Processing...</code>")
-        
-        user_data = await digital_botz.get_user_data(user_id)
-        if not user_data:
-            user_data = {}
         
         try:
             prefix = user_data.get('prefix', None)
@@ -107,9 +108,8 @@ async def auto_rename_start(bot, message):
             new_filename = await add_prefix_suffix(filename, prefix, suffix)
         except Exception as e:
             logger.error(f"Prefix/Suffix Error: {e}")
-            new_filename = filename # Fallback to original if prefixing fails
+            new_filename = filename 
 
-        # Creating Directory
         os.makedirs("Metadata", exist_ok=True)
         os.makedirs("Renames", exist_ok=True)
 
@@ -118,13 +118,11 @@ async def auto_rename_start(bot, message):
 
         await rkn_processing.edit("<code>Downloading...</code>")
         
-        # Download File
         try:            
             dl_path = await bot.download_media(message=message, file_name=file_path, progress=progress_for_pyrogram, progress_args=(DOWNLOAD_TEXT, rkn_processing, time.time()))                    
         except Exception as e:
             return await rkn_processing.edit(f"Download Error: {escape(str(e))}")
 
-        # Process Metadata
         metadata_mode = False
         try:
             metadata_mode = await digital_botz.get_metadata_mode(user_id)
@@ -145,7 +143,6 @@ async def auto_rename_start(bot, message):
         duration = await get_duration(final_file_path)
         ph_path = None
         
-        # Caption
         c_caption = user_data.get('caption', None)
         c_thumb = user_data.get('file_id', None)
         
@@ -157,7 +154,6 @@ async def auto_rename_start(bot, message):
         else:
              caption = f"<b>{escape(str(new_filename))}</b>\n\n<b>User:</b> {escape(str(message.from_user.first_name))}\n<b>User ID:</b> <code>{user_id}</code>"
              
-        # Thumbnail
         if (hasattr(file, 'thumbs') and file.thumbs) or c_thumb:
              try:
                  if c_thumb:
@@ -172,7 +168,6 @@ async def auto_rename_start(bot, message):
                  logger.exception("Thumbnail error: %s", e)
                  ph_path = None
 
-        # Upload File
         filw, error = await upload_files(
             bot, message.chat.id, upload_type, final_file_path, 
             ph_path, caption, duration, rkn_processing
