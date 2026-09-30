@@ -53,7 +53,6 @@ async def auto_rename_start(bot, message):
     try:
         user_id = message.from_user.id if message.from_user else message.chat.id
         
-        # 1. सबसे पहले यूज़र का डेटा निकालें ताकि पता चले कि वो प्रीमियम है या नहीं
         user_data = await digital_botz.get_user_data(user_id)
         if not user_data:
             user_data = {}
@@ -66,9 +65,9 @@ async def auto_rename_start(bot, message):
         if user_id not in user_usage or user_usage[user_id]['date'] != today:
             user_usage[user_id] = {'date': today, 'count': 0}
             
-        # अगर यूज़र एडमिन (Admin) या प्रीमियम (Premium) नहीं है, तभी लिमिट लगेगी
         if user_usage[user_id]['count'] >= DAILY_LIMIT and user_id != Config.ADMIN and not is_premium:
-            await message.reply_text(f"⚠️ **आपकी आज की लिमिट खत्म हो गई है!**\n\nआप 1 दिन में सिर्फ {DAILY_LIMIT} फाइलें ही रीनेम कर सकते हैं।\n\n👑 **अनलिमिटेड रीनेम के लिए प्रीमियम खरीदें!** (संपर्क करें: Admin)")
+            # 👉 यहाँ बदलाव किया गया है (Admin को Clickable Mention बना दिया गया है)
+            await message.reply_text(f"⚠️ **आपकी आज की लिमिट खत्म हो गई है!**\n\nआप 1 दिन में सिर्फ {DAILY_LIMIT} फाइलें ही रीनेम कर सकते हैं।\n\n👑 **अनलिमिटेड रीनेम के लिए प्रीमियम खरीदें!**\n\n👉 **संपर्क करें:** <a href='tg://user?id={Config.ADMIN}'>👨‍💻 Admin</a>")
             return
             
         user_usage[user_id]['count'] += 1
@@ -192,4 +191,4 @@ async def auto_rename_start(bot, message):
             await message.reply_text(f"⚠️ Error processing file: {e}")
         except:
             pass
-        
+                       
