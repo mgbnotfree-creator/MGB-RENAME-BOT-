@@ -17,6 +17,10 @@ DOWNLOAD_TEXT = """Download Started..."""
 
 logger = logging.getLogger(__name__)
 
+# ---> IMPORTANT: This is required by your main bot file to start <---
+app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION, parse_mode=ParseMode.HTML)
+
+
 async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption, duration, rkn_processing):
     """
     Unified function to upload files based on type
@@ -79,6 +83,34 @@ async def auto_rename_start(bot, message):
                 filename = f"video_{int(time.time())}.mp4"
             else:
                 filename = f"file_{int(time.time())}.mkv"
+
+        # Ask for new filename
+        try:
+            ask_msg = await message.reply_text(
+                f"<b>Current Name:</b> <code>{escape(str(filename))}</code>\n\n"
+                f"Please send the new filename with extension.\n\n"
+                f"<i>If you don't want to change the name, just reply with /cancel or wait.</i>",
+                reply_markup=ForceReply(True)
+            )
+            
+            # Wait for user reply
+            try:
+                response = await bot.listen(chat_id=message.chat.id, timeout=300) # 5 minutes timeout
+                if response.text and response.text.lower() != '/cancel':
+                    filename = response.text
+                    # ensure extension
+                    if "." not in filename:
+                         extn = (file.file_name or "").rsplit(".", 1)[-1] or "mkv"
+                         filename = f"{filename}.{extn}"
+                await response.delete()
+            except asyncio.TimeoutError:
+                pass # User didn't reply in time, proceed with original name
+            
+            await ask_msg.delete()
+            
+        except Exception as e:
+            logger.warning(f"Could not ask for filename: {e}")
+            pass # Proceed with original name if asking fails
 
         # Determine Upload Type
         if message.media == MessageMediaType.VIDEO:
@@ -200,3 +232,4 @@ async def auto_rename_start(bot, message):
             await message.reply_text(f"⚠️ <b>Error:</b> <code>{escape(str(err))}</code>")
         except Exception:
             pass
+                               
