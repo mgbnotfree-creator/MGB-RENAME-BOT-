@@ -47,7 +47,8 @@ class Database:
             uploadlimit=Config.FREE_UPLOAD_LIMIT,
             daily=0,
             metadata_mode=False,
-            metadata_code="--change-title @TechifyBots\n--change-video-title @TechifyBots\n--change-audio-title @TechifyBots\n--change-subtitle-title @TechifyBots\n--change-author @TechifyBots",
+            # 🛑 YAHAN DEFAULT METADATA ME APKA NAAM SET KAR DIYA HAI 🛑
+            metadata_code="--change-title @MGB_NOT_FREE\n--change-video-title @MGB_NOT_FREE\n--change-audio-title @MGB_NOT_FREE\n--change-subtitle-title @MGB_NOT_FREE\n--change-author @MGB_NOT_FREE",
             expiry_time=None,
             has_free_trial=False,
             ban_status=dict(
@@ -275,3 +276,4 @@ class Database:
         return banned_users
         
 digital_botz = Database(Config.DB_URL, Config.DB_NAME)
+    
