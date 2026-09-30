@@ -17,7 +17,7 @@ DOWNLOAD_TEXT = """Download Started..."""
 
 logger = logging.getLogger(__name__)
 
-# ---> IMPORTANT: This is required by your main bot file to start <---
+# ---> CRITICAL FIX: The app object must be defined here so bot.py can import it <---
 app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION, parse_mode=ParseMode.HTML)
 
 
@@ -232,4 +232,3 @@ async def auto_rename_start(bot, message):
             await message.reply_text(f"⚠️ <b>Error:</b> <code>{escape(str(err))}</code>")
         except Exception:
             pass
-                               
