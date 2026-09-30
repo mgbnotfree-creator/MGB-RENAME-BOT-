@@ -25,10 +25,47 @@ DAILY_LIMIT = 5
 user_usage = {}   
 # ==========================================
 
-async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption, duration, rkn_processing):
+# ==========================================
+# 🎨 CUSTOM ARTIST COMMANDS 🎨
+# ==========================================
+@Client.on_message(filters.command("setartist") & filters.private)
+async def set_artist(bot, message):
+    if len(message.command) == 1:
+        return await message.reply_text("⚠️ **गलत तरीका!**\n\nऐसे इस्तेमाल करें: `/setartist आपका_नाम`\nउदाहरण: `/setartist MGB King`")
+    
+    custom_artist = message.text.split(" ", 1)[1]
+    user_id = message.from_user.id
+    
+    try:
+        try:
+            await digital_botz.col.update_one({"_id": user_id}, {"$set": {"artist_name": custom_artist}}, upsert=True)
+        except AttributeError:
+            await digital_botz.db.users.update_one({"_id": user_id}, {"$set": {"artist_name": custom_artist}}, upsert=True)
+        await message.reply_text(f"✅ **Artist Name सेट हो गया!**\n\nअब आपकी फाइलों में Artist की जगह **{custom_artist}** सेट होगा।")
+    except Exception as e:
+        await message.reply_text(f"⚠️ एरर: {e}")
+
+@Client.on_message(filters.command("delartist") & filters.private)
+async def del_artist(bot, message):
+    user_id = message.from_user.id
+    try:
+        try:
+            await digital_botz.col.update_one({"_id": user_id}, {"$unset": {"artist_name": ""}})
+        except AttributeError:
+            await digital_botz.db.users.update_one({"_id": user_id}, {"$unset": {"artist_name": ""}})
+        await message.reply_text("❌ **Custom Artist Name हटा दिया गया!**\n\nअब वापस आपके टेलीग्राम नाम का इस्तेमाल होगा।")
+    except Exception as e:
+        pass
+# ==========================================
+
+
+async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption, duration, rkn_processing, artist_name):
     try:
         if not os.path.exists(file_path):
             return None, f"File not found: {file_path}"
+            
+        file_name_only = os.path.basename(file_path)
+        
         if upload_type == "document":
             filw = await bot.send_document(
                 sender_id, document=file_path, thumb=ph_path, caption=caption,
@@ -38,8 +75,10 @@ async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption,
                 sender_id, video=file_path, caption=caption, thumb=ph_path, duration=duration,
                 progress=progress_for_pyrogram, progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
         elif upload_type == "audio":
+            # Audio metadata mein Artist name add rahega
             filw = await bot.send_audio(
                 sender_id, audio=file_path, caption=caption, thumb=ph_path, duration=duration,
+                performer=artist_name, title=file_name_only, 
                 progress=progress_for_pyrogram, progress_args=(UPLOAD_TEXT, rkn_processing, time.time()))
         else:
             return None, f"Unknown upload type: {upload_type}"
@@ -57,11 +96,16 @@ async def auto_rename_start(bot, message):
         if not user_data:
             user_data = {}
             
+        # 🛑 YAHAN CUSTOM ARTIST CHECK HOGA 🛑
+        custom_artist = user_data.get('artist_name', None)
+        if custom_artist:
+            artist_name = custom_artist
+        else:
+            artist_name = message.from_user.first_name if message.from_user else "Unknown Artist"
+            
         is_premium = user_data.get('is_premium', False)
         premium_expiry = user_data.get('premium_expiry', 0)
         
-        # 🛑 NEW: टाइम लिमिट चेक 🛑
-        # अगर एक्सपायरी डेट खत्म हो चुकी है (आज का समय > एक्सपायरी का समय), तो प्रीमियम हटा दो
         if is_premium and premium_expiry and time.time() > premium_expiry:
             is_premium = False
             
@@ -72,7 +116,7 @@ async def auto_rename_start(bot, message):
             user_usage[user_id] = {'date': today, 'count': 0}
             
         if user_usage[user_id]['count'] >= DAILY_LIMIT and user_id != Config.ADMIN and not is_premium:
-            await message.reply_text(f"⚠️ **आपकी आज की लिमिट खत्म हो गई है!**\n\nआप 1 दिन में सिर्फ {DAILY_LIMIT} फाइलें ही रीनेम कर सकते हैं।\n\n👑 **अनलिमिटेड रीनेम के लिए प्रीमियम खरीदें!**\n\n👉 **संपर्क करें:** <a href='tg://user?id={Config.ADMIN}'>👨‍💻 Admin</a>")
+            await message.reply_text(f"⚠️ **आपकी आज की लिमिट खत्म हो गई है!**\n\nआप 1 दिन में सिर्फ {DAILY_LIMIT} फाइलें ही रीनेम कर सकते हैं。\n\n👑 **अनलिमिटेड रीनेम के लिए प्रीमियम खरीदें!**\n\n👉 **संपर्क करें:** <a href='tg://user?id={Config.ADMIN}'>👨‍💻 Admin</a>")
             return
             
         user_usage[user_id]['count'] += 1
@@ -156,7 +200,8 @@ async def auto_rename_start(bot, message):
              except Exception:
                  caption = f"<b>{escape(str(new_filename))}</b>"             
         else:
-             caption = f"<b>{escape(str(new_filename))}</b>\n\n<b>User:</b> {escape(str(message.from_user.first_name))}\n<b>User ID:</b> <code>{user_id}</code>"
+             # Caption bilkul clean rakha gaya hai
+             caption = f"<b>{escape(str(new_filename))}</b>"
              
         if (hasattr(file, 'thumbs') and file.thumbs) or c_thumb:
              try:
@@ -174,7 +219,7 @@ async def auto_rename_start(bot, message):
 
         filw, error = await upload_files(
             bot, message.chat.id, upload_type, final_file_path, 
-            ph_path, caption, duration, rkn_processing
+            ph_path, caption, duration, rkn_processing, artist_name
         )
         
         if error:
@@ -196,4 +241,4 @@ async def auto_rename_start(bot, message):
             await message.reply_text(f"⚠️ Error processing file: {e}")
         except:
             pass
-            
+        
