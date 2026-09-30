@@ -14,7 +14,7 @@ DOWNLOAD_TEXT = """Download Started..."""
 
 logger = logging.getLogger(__name__)
 
-# ---> CRITICAL FIX: The app object MUST be here <---
+# ---> यह लाइन बहुत ज़रूरी है (4GB Session के लिए) <---
 app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH, session_string=Config.STRING_SESSION, parse_mode=ParseMode.HTML)
 
 
@@ -58,9 +58,9 @@ async def upload_files(bot, sender_id, upload_type, file_path, ph_path, caption,
         return None, str(e)
 
 
-# --- FAIL-PROOF DIRECT AUTO RENAME ---
-@app.on_message(filters.private & (filters.audio | filters.document | filters.video))
-async def auto_rename_start(client, message):
+# ---> FIX: Added group=1 so this handler never gets blocked! <---
+@Client.on_message(filters.private & (filters.audio | filters.document | filters.video), group=1)
+async def auto_rename_start(bot, message):
     try:
         user_id = message.from_user.id if message.from_user else message.chat.id
         
@@ -120,7 +120,7 @@ async def auto_rename_start(client, message):
         
         # Download File
         try:            
-            dl_path = await client.download_media(message=message, file_name=file_path, progress=progress_for_pyrogram, progress_args=(DOWNLOAD_TEXT, rkn_processing, time.time()))                    
+            dl_path = await bot.download_media(message=message, file_name=file_path, progress=progress_for_pyrogram, progress_args=(DOWNLOAD_TEXT, rkn_processing, time.time()))                    
         except Exception as e:
             return await rkn_processing.edit(f"Download Error: {escape(str(e))}")
 
@@ -161,9 +161,9 @@ async def auto_rename_start(client, message):
         if (hasattr(file, 'thumbs') and file.thumbs) or c_thumb:
              try:
                  if c_thumb:
-                     ph_path = await client.download_media(c_thumb) 
+                     ph_path = await bot.download_media(c_thumb) 
                  elif file.thumbs:
-                     ph_path = await client.download_media(file.thumbs[0].file_id)
+                     ph_path = await bot.download_media(file.thumbs[0].file_id)
                  
                  if ph_path and os.path.exists(ph_path):
                      with Image.open(ph_path) as img:
@@ -174,7 +174,7 @@ async def auto_rename_start(client, message):
 
         # Upload File
         filw, error = await upload_files(
-            client, message.chat.id, upload_type, final_file_path, 
+            bot, message.chat.id, upload_type, final_file_path, 
             ph_path, caption, duration, rkn_processing
         )
         
@@ -184,7 +184,7 @@ async def auto_rename_start(client, message):
 
         if Config.BIN_CHANNEL:
             try:
-                await client.copy_message(chat_id=Config.BIN_CHANNEL, from_chat_id=filw.chat.id, message_id=filw.id)
+                await bot.copy_message(chat_id=Config.BIN_CHANNEL, from_chat_id=filw.chat.id, message_id=filw.id)
             except Exception:
                 pass
                 
@@ -197,4 +197,4 @@ async def auto_rename_start(client, message):
             await message.reply_text(f"⚠️ Error processing file: {e}")
         except:
             pass
-            
+        
