@@ -21,7 +21,7 @@ app = Client("4gb_FileRenameBot", api_id=Config.API_ID, api_hash=Config.API_HASH
 # ==========================================
 # 🛑 DAILY LIMIT SETTINGS 🛑
 # ==========================================
-DAILY_LIMIT = 10  
+DAILY_LIMIT = 5  
 user_usage = {}   
 # ==========================================
 
@@ -57,8 +57,16 @@ async def auto_rename_start(bot, message):
         if not user_data:
             user_data = {}
             
-        is_premium = user_data.get('is_premium', False)
+        is_premium = False
+        plan = user_data.get('plan', 'Free')
         
+        if plan.lower() not in ['free', 'none', '']:
+            is_premium = True
+        elif user_data.get('is_premium') == True:
+            is_premium = True
+        elif user_data.get('expire_date') or user_data.get('premium_access'):
+            is_premium = True
+            
         # --- DAILY LIMIT CHECK ---
         today = date.today().isoformat()
         
@@ -66,7 +74,6 @@ async def auto_rename_start(bot, message):
             user_usage[user_id] = {'date': today, 'count': 0}
             
         if user_usage[user_id]['count'] >= DAILY_LIMIT and user_id != Config.ADMIN and not is_premium:
-            # 👉 यहाँ बदलाव किया गया है (Admin को Clickable Mention बना दिया गया है)
             await message.reply_text(f"⚠️ **आपकी आज की लिमिट खत्म हो गई है!**\n\nआप 1 दिन में सिर्फ {DAILY_LIMIT} फाइलें ही रीनेम कर सकते हैं।\n\n👑 **अनलिमिटेड रीनेम के लिए प्रीमियम खरीदें!**\n\n👉 **संपर्क करें:** <a href='tg://user?id={Config.ADMIN}'>👨‍💻 Admin</a>")
             return
             
@@ -188,7 +195,7 @@ async def auto_rename_start(bot, message):
     except Exception as e:
         logger.error(f"Critical error in auto_rename: {e}")
         try:
-            await message.reply_text(f"⚠️ Error processing file: {e}")
+            await message.reply_text(f"⚠️️ Error processing file: {e}")
         except:
             pass
-                       
+        
